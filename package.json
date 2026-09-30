@@ -1,0 +1,28 @@
+{
+  "name": "linchuan-personal-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "林川 · 全栈开发者 — 个人信息网站（Vite + Vue 3 + TypeScript）",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite-ssg build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.7",
+    "vite-ssg": "^28.3.0",
+    "vue-tsc": "^2.2.0"
+  }
+}
