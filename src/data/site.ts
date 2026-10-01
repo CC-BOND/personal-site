@@ -211,7 +211,7 @@ export const site = {
   contact: {
     titleHtml: '一起做点什么？<br>保持联系。',
     email: '15850660186@163.com',
-    domain: 'zhuzhangcheng.eu.cc',
+    domain: 'zhuzhangcheng.asia',
     socials: [
       { label: 'Gitee', href: 'https://gitee.com/cc-bond' },
       { label: '电话', href: 'tel:15850660186' },

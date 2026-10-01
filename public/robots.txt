@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zhuzhangcheng.eu.cc/sitemap.xml
+Sitemap: https://zhuzhangcheng.asia/sitemap.xml
