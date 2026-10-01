@@ -51,8 +51,8 @@ export const site = {
       '有校园宣传管理和导师课题组经历，沟通协作与执行推进意识较强；保持持续学习，并能借助 AI 工具提升工作效率。常驻淮安，开放远程与合作。',
     ],
     facts: [
-      { value: '淮安 · 中国', label: '常驻与远程' },
-      { value: 'Vue / Java / 小程序', label: '主要技术栈' },
+      { value: '中国 · 淮安', label: '常驻与远程' },
+      { value: 'Vue / Java / 小程序 / PR / 剪映 / Agent', label: '主要技术栈' },
       { value: '开放合作中', label: '自由创作 · 远程' },
     ] as Fact[],
   },

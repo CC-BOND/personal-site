@@ -46,24 +46,25 @@ import { site } from '@/data/site'
 <style scoped>
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 480px) 1fr;
+  grid-template-columns: 120px 1fr;
   gap: clamp(32px, 5vw, 80px);
   margin-top: clamp(40px, 5vw, 72px);
 }
 .about-photo {
   position: relative;
   align-self: start;
+  aspect-ratio: 4 / 5;
 }
 .about-photo .frame {
   position: absolute;
   inset: 0;
   border: 1.5px solid var(--accent);
-  transform: translate(16px, 16px);
+  transform: translate(6px, 6px);
 }
 .about-photo img {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: 100%;
   object-fit: cover;
   filter: grayscale(1);
   transition: filter 0.9s var(--ease);
@@ -123,7 +124,7 @@ import { site } from '@/data/site'
     grid-template-columns: 1fr;
   }
   .about-photo {
-    max-width: 440px;
+    max-width: 110px;
   }
 }
 @media (max-width: 620px) {
