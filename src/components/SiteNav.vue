@@ -1,46 +1,91 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
 import { site } from '@/data/site'
 
+const route = useRoute()
+
 const open = ref(false)
+const progress = ref(0)
+const active = ref('')
+const onDark = ref(false)
+
+let ticking = false
+
+function update() {
+  const doc = document.documentElement
+  const max = doc.scrollHeight - doc.clientHeight
+  progress.value = max > 0 ? doc.scrollTop / max : 0
+
+  // 滚动高亮：取当前滚动位置往上、最靠近视口 35% 处的区块
+  const probe = window.innerHeight * 0.35
+  let current = ''
+  document.querySelectorAll<HTMLElement>('main section[id]').forEach((section) => {
+    if (section.getBoundingClientRect().top <= probe) current = section.id
+  })
+  active.value = current
+
+  // 滚动到深色联系区时，固定导航自动反色
+  const contact = document.getElementById('contact')
+  if (contact) {
+    const rect = contact.getBoundingClientRect()
+    const navH = 76
+    onDark.value = rect.top <= navH && rect.bottom > navH
+  } else {
+    onDark.value = false
+  }
+  ticking = false
+}
+
+function onScroll() {
+  if (!ticking) {
+    ticking = true
+    requestAnimationFrame(update)
+  }
+}
 
 function close() {
   open.value = false
 }
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onScroll)
+  update()
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', onScroll)
+})
 </script>
 
 <template>
-  <header class="nav" :class="{ open }">
-    <div class="wrap nav-inner">
-      <RouterLink to="/" class="nav-logo" @click="close">
-        <span class="logo-mark">{{ site.logoMark }}</span>
-        <span class="logo-word">
-          {{ site.name }}
-          <span class="logo-en">{{ site.nameEn }}</span>
-        </span>
-      </RouterLink>
+  <header class="nav" :class="{ open, 'on-dark': onDark }">
+    <RouterLink to="/" class="nav-brand" aria-label="回到首页" @click="close">
+      <span class="nav-mark">{{ site.logoMark }}</span>
+      <span class="nav-name">{{ site.name }}</span>
+      <span class="nav-en">{{ site.nameEn }}</span>
+    </RouterLink>
 
-      <nav class="nav-links" :aria-expanded="open">
-        <RouterLink
-          v-for="item in site.nav"
-          :key="item.id"
-          :to="{ path: '/', hash: `#${item.id}` }"
-          @click="close"
-        >
-          {{ item.label }}
-        </RouterLink>
-      </nav>
-
-      <button
-        class="nav-toggle"
-        :aria-expanded="open"
-        aria-label="菜单"
-        @click="open = !open"
+    <nav class="nav-links">
+      <RouterLink
+        v-for="item in site.nav"
+        :key="item.id"
+        :to="{ path: '/', hash: `#${item.id}` }"
+        :class="{ active: active === item.id && route.path === '/' }"
+        @click="close"
       >
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+        {{ item.label }}
+      </RouterLink>
+    </nav>
+
+    <div class="nav-status"><i></i>OPEN FOR WORK</div>
+
+    <button class="nav-toggle" :aria-expanded="open" aria-label="菜单" @click="open = !open">
+      <i></i><i></i><i></i>
+    </button>
+
+    <span class="nav-progress" :style="{ '--p': progress }"></span>
   </header>
 </template>
 
@@ -50,126 +95,189 @@ function close() {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  background: rgba(247, 247, 244, 0.92);
-  backdrop-filter: blur(8px);
+  z-index: 60;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 0 var(--pad);
+  background: rgba(242, 240, 234, 0.86);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
+  transition: background 0.3s, color 0.3s;
 }
-.nav-inner {
+.nav.on-dark {
+  background: rgba(19, 18, 17, 0.9);
+  color: var(--paper);
+  border-bottom-color: rgba(242, 240, 234, 0.16);
+}
+.nav-brand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 64px;
+  gap: 14px;
 }
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px;
-}
-.logo-mark {
-  width: 30px;
-  height: 30px;
-  background: var(--ink);
-  color: var(--white);
+.nav-mark {
+  width: 34px;
+  height: 34px;
   display: grid;
   place-items: center;
+  flex: none;
+  background: var(--ink);
+  color: var(--paper);
   font-family: var(--font-serif);
   font-weight: 900;
-  font-size: 17px;
+  font-size: 19px;
+  transition: background 0.3s, color 0.3s;
 }
-.logo-word {
+.nav.on-dark .nav-mark {
+  background: var(--accent);
+  color: var(--ink);
+}
+.nav-name {
   font-family: var(--font-serif);
   font-weight: 700;
-  font-size: 17px;
-  letter-spacing: 0.04em;
+  font-size: 20px;
+  white-space: nowrap;
 }
-.logo-en {
+.nav-en {
   font-family: var(--font-en);
-  font-weight: 400;
-  font-size: 13px;
+  font-size: 12px;
+  letter-spacing: 0.24em;
   color: var(--gray);
+  white-space: nowrap;
 }
 .nav-links {
   display: flex;
-  gap: 34px;
+  gap: clamp(18px, 2.4vw, 42px);
+  margin-left: auto;
 }
 .nav-links a {
-  font-size: 14px;
-  color: var(--ink-soft);
+  font-size: 15px;
+  color: var(--gray);
   position: relative;
-  padding: 4px 0;
-  transition: color 0.2s;
+  padding: 6px 0;
+  white-space: nowrap;
+  transition: color 0.25s;
 }
 .nav-links a::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
-  height: 1px;
+  height: 1.5px;
   width: 0;
-  background: var(--ink);
-  transition: width 0.25s ease;
+  background: var(--accent);
+  transition: width 0.3s var(--ease);
 }
-.nav-links a:hover::after {
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--ink);
+}
+.nav-links a.active::after {
   width: 100%;
 }
-.nav-links a:hover {
-  color: var(--ink);
+.nav.on-dark .nav-links a:hover,
+.nav.on-dark .nav-links a.active {
+  color: var(--paper);
+}
+.nav-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--gray);
+}
+.nav-status i {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  flex: none;
+  animation: nav-pulse 2.4s infinite;
+}
+@keyframes nav-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.nav-progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(var(--p, 0));
 }
 .nav-toggle {
   display: none;
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   position: relative;
+  flex: none;
+  margin-left: auto;
 }
-.nav-toggle span {
+.nav-toggle i {
   position: absolute;
-  left: 10px;
-  right: 10px;
-  height: 2px;
-  background: var(--ink);
+  left: 9px;
+  right: 9px;
+  height: 1.5px;
+  background: currentColor;
   transition: transform 0.3s, opacity 0.3s;
 }
-.nav-toggle span:nth-child(1) {
-  top: 15px;
+.nav-toggle i:nth-child(1) {
+  top: 14px;
 }
-.nav-toggle span:nth-child(2) {
-  top: 23px;
+.nav-toggle i:nth-child(2) {
+  top: 20px;
 }
-.nav-toggle span:nth-child(3) {
-  top: 31px;
+.nav-toggle i:nth-child(3) {
+  top: 26px;
 }
-.nav.open .nav-toggle span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
+.nav.open .nav-toggle i:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
 }
-.nav.open .nav-toggle span:nth-child(2) {
+.nav.open .nav-toggle i:nth-child(2) {
   opacity: 0;
 }
-.nav.open .nav-toggle span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+.nav.open .nav-toggle i:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .nav-links {
     position: fixed;
-    top: 64px;
     left: 0;
     right: 0;
-    background: var(--paper);
+    top: var(--nav-h);
     flex-direction: column;
     gap: 0;
-    padding: 10px 0 20px;
+    margin: 0;
+    padding: 6px 0 14px;
+    background: var(--paper);
     border-bottom: 1px solid var(--line);
-    transform: translateY(-120%);
-    transition: transform 0.3s ease;
+    transform: translateY(-115%);
+    transition: transform 0.35s var(--ease);
+  }
+  .nav.on-dark .nav-links {
+    background: var(--ink);
   }
   .nav.open .nav-links {
     transform: none;
   }
   .nav-links a {
-    padding: 14px 22px;
+    padding: 14px var(--pad);
     font-size: 16px;
+  }
+  .nav-status {
+    display: none;
   }
   .nav-toggle {
     display: block;

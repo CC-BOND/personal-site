@@ -16,14 +16,12 @@ const project = computed(() =>
         ← 返回项目
       </RouterLink>
 
-      <header class="detail-head">
-        <span class="section-index">Project / Case Study</span>
-        <h1 class="page-title">{{ project.title }}</h1>
-        <p class="page-desc">{{ project.description }}</p>
-        <div class="tech detail-tech">
-          <span v-for="t in project.tech" :key="t">{{ t }}</span>
-        </div>
-      </header>
+      <span class="meta">Project / Case Study</span>
+      <h1 class="page-title">{{ project.title }}</h1>
+      <p class="page-desc">{{ project.description }}</p>
+      <div class="tech">
+        <span v-for="item in project.tech" :key="item" class="tag">{{ item }}</span>
+      </div>
 
       <figure class="page-thumb">
         <img :src="project.image" :alt="project.title" />
@@ -32,13 +30,13 @@ const project = computed(() =>
       <section class="page-body">
         <h2>项目亮点</h2>
         <ul>
-          <li v-for="(h, i) in project.highlights" :key="i">{{ h }}</li>
+          <li v-for="(item, i) in project.highlights" :key="i">{{ item }}</li>
         </ul>
       </section>
     </template>
 
     <div v-else class="missing">
-      <span class="section-index">Project / Not Found</span>
+      <span class="meta">Project / Not Found</span>
       <h1 class="page-title">未找到该项目</h1>
       <p class="page-desc">你访问的项目不存在或已被移除。</p>
       <RouterLink :to="{ path: '/', hash: '#projects' }" class="btn btn-ghost">
@@ -49,8 +47,11 @@ const project = computed(() =>
 </template>
 
 <style scoped>
-.detail-tech {
-  margin-top: 28px;
+.tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 26px;
 }
 .missing .btn {
   margin-top: 32px;

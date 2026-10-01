@@ -1,76 +1,74 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import SectionHead from '@/components/SectionHead.vue'
+import { useDetailOverlay } from '@/composables/useDetailOverlay'
 import { site } from '@/data/site'
+
+const overlay = useDetailOverlay()
 </script>
 
 <template>
   <section class="section wrap" id="blog">
     <SectionHead index="05 / Writing" title="最新文章" :sub="site.blog.sub" />
-    <div class="blog-list">
+
+    <div class="posts">
       <RouterLink
-        v-for="post in site.blog.posts"
+        v-for="(post, i) in site.blog.posts"
         :key="post.slug"
         :to="`/blog/${post.slug}`"
-        class="blog-item reveal"
+        class="post reveal"
+        :data-d="i"
         v-reveal
+        @click.prevent="overlay.open({ kind: 'post', post })"
       >
-        <span class="blog-date">{{ post.date }}</span>
-        <h3>{{ post.title }}</h3>
-        <span class="blog-cat">{{ post.category }}</span>
+        <span class="post-date">{{ post.date }}</span>
+        <span class="post-title">{{ post.title }}</span>
+        <span class="tag">{{ post.category }}</span>
       </RouterLink>
     </div>
   </section>
 </template>
 
 <style scoped>
-.blog-list {
+.posts {
+  margin-top: clamp(32px, 4vw, 56px);
   border-top: 1px solid var(--line);
 }
-.blog-item {
+.post {
   display: grid;
-  grid-template-columns: 120px 1fr auto;
-  gap: 28px;
-  align-items: baseline;
-  padding: 28px 8px;
+  grid-template-columns: minmax(120px, 200px) 1fr auto;
+  gap: clamp(16px, 2vw, 40px);
+  align-items: center;
+  padding: clamp(20px, 2.2vw, 32px) 12px;
   border-bottom: 1px solid var(--line);
-  transition: background 0.2s;
-  cursor: pointer;
+  transition: background 0.3s;
 }
-.blog-item:hover {
+.post:hover {
   background: var(--white);
 }
-.blog-date {
-  font-family: var(--font-en);
+.post-date {
+  font-family: var(--font-mono);
   font-size: 13px;
   color: var(--gray);
-  letter-spacing: 0.05em;
 }
-.blog-item h3 {
+.post-title {
   font-family: var(--font-serif);
-  font-size: 19px;
   font-weight: 700;
-  transition: transform 0.2s;
+  font-size: clamp(16px, 1.45vw, 24px);
+  transition: transform 0.3s var(--ease);
 }
-.blog-item:hover h3 {
-  transform: translateX(6px);
-}
-.blog-cat {
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  border: 1px solid var(--line);
-  padding: 4px 12px;
-  color: var(--gray);
+.post:hover .post-title {
+  transform: translateX(8px);
 }
 
-@media (max-width: 768px) {
-  .blog-item {
+@media (max-width: 860px) {
+  .post {
     grid-template-columns: 1fr;
     gap: 8px;
-    padding: 22px 4px;
+    padding: 20px 6px;
   }
-  .blog-date {
-    order: -1;
+  .post .tag {
+    justify-self: start;
   }
 }
 </style>

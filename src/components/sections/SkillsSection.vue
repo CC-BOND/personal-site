@@ -6,12 +6,22 @@ import { site } from '@/data/site'
 <template>
   <section class="section wrap" id="skills">
     <SectionHead index="02 / Skills" title="技能栈" :sub="site.skills.sub" />
+
     <div class="skills-grid">
-      <div v-for="s in site.skills.groups" :key="s.num" class="skill-cell reveal" v-reveal>
-        <span class="skill-num">{{ s.num }}</span>
-        <h3>{{ s.title }}</h3>
-        <div class="skill-tags">
-          <span v-for="t in s.tags" :key="t">{{ t }}</span>
+      <div
+        v-for="(group, i) in site.skills.groups"
+        :key="group.num"
+        class="skill reveal"
+        :data-d="i"
+        v-reveal
+      >
+        <span class="skill-num">{{ group.num }}</span>
+        <div class="skill-body">
+          <h3>{{ group.title }}</h3>
+          <span class="skill-line"></span>
+          <div class="skill-tags">
+            <span v-for="tag in group.tags" :key="tag" class="tag">{{ tag }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -22,54 +32,56 @@ import { site } from '@/data/site'
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border-top: 1px solid var(--line);
+  margin-top: clamp(36px, 4.4vw, 64px);
+  border-top: 1px solid var(--line-strong);
   border-left: 1px solid var(--line);
 }
-.skill-cell {
+.skill {
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  padding: 36px 30px 40px;
+  padding: clamp(22px, 2.2vw, 34px);
+  min-height: clamp(300px, 28vw, 460px);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.35s;
+}
+.skill:hover {
+  background: var(--white);
 }
 .skill-num {
-  font-family: var(--font-en);
-  font-size: 13px;
-  color: var(--gray);
-  letter-spacing: 0.1em;
-  display: block;
-  margin-bottom: 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  text-transform: uppercase;
 }
-.skill-cell h3 {
+.skill-body {
+  margin-top: auto;
+}
+.skill h3 {
   font-family: var(--font-serif);
-  font-size: 22px;
   font-weight: 700;
+  font-size: clamp(20px, 1.9vw, 30px);
   margin-bottom: 20px;
+}
+.skill-line {
+  display: block;
+  height: 1px;
+  background: var(--line-strong);
 }
 .skill-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-}
-.skill-tags span {
-  font-size: 13px;
-  padding: 5px 12px;
-  border: 1px solid var(--line);
-  color: var(--ink-soft);
-  background: var(--white);
-  transition: all 0.2s;
-}
-.skill-tags span:hover {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--white);
+  margin-top: 20px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .skills-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 620px) {
   .skills-grid {
     grid-template-columns: 1fr;
   }

@@ -32,10 +32,10 @@ export const site = {
     nameEn: 'GG BOND · FREE CREATOR',
     description:
       '自由创作者，前端 / 小程序 / 后端开发与视频剪辑双线并行。3 年开发经验、5 年视频剪辑经验，做过自媒体博主与影视剧集剪辑。常驻淮安，开放远程与合作。',
-    meta: [
-      { value: '3+', label: '年开发经验' },
-      { value: '5', label: '年视频剪辑' },
-      { value: '3', label: '独立上线项目' },
+    stats: [
+      { value: 3, suffix: '+', label: '年开发经验' },
+      { value: 5, suffix: '', label: '年视频剪辑' },
+      { value: 3, suffix: '', label: '独立上线项目' },
     ],
   },
 
@@ -211,6 +211,7 @@ export const site = {
   contact: {
     titleHtml: '一起做点什么？<br>保持联系。',
     email: '15850660186@163.com',
+    domain: 'zhuzhangcheng.eu.cc',
     socials: [
       { label: 'Gitee', href: 'https://gitee.com/cc-bond' },
       { label: '电话', href: 'tel:15850660186' },

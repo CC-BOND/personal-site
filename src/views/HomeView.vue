@@ -9,11 +9,13 @@ import ContactSection from '@/components/sections/ContactSection.vue'
 </script>
 
 <template>
-  <HeroSection />
-  <AboutSection />
-  <SkillsSection />
-  <ProjectsSection />
-  <ExperienceSection />
-  <BlogSection />
-  <ContactSection />
+  <main>
+    <HeroSection />
+    <AboutSection />
+    <SkillsSection />
+    <ProjectsSection />
+    <ExperienceSection />
+    <BlogSection />
+    <ContactSection />
+  </main>
 </template>

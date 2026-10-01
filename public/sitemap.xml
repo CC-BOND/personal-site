@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 已填写线上地址；若日后绑定自定义域名，请把 personal-site-liard-omega.vercel.app 替换为你的域名 -->
+<!-- 已填写线上地址；若日后绑定自定义域名，请把 zhuzhangcheng.eu.cc 替换为你的域名 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/</loc>
+    <loc>https://zhuzhangcheng.eu.cc/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/projects/group-ordering</loc>
+    <loc>https://zhuzhangcheng.eu.cc/projects/group-ordering</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/projects/scan-order</loc>
+    <loc>https://zhuzhangcheng.eu.cc/projects/scan-order</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/projects/what-to-eat</loc>
+    <loc>https://zhuzhangcheng.eu.cc/projects/what-to-eat</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/blog/wechat-miniapp-websocket-ordering</loc>
+    <loc>https://zhuzhangcheng.eu.cc/blog/wechat-miniapp-websocket-ordering</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/blog/vue3-element-plus-admin</loc>
+    <loc>https://zhuzhangcheng.eu.cc/blog/vue3-element-plus-admin</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/blog/nodejs-rest-api-design</loc>
+    <loc>https://zhuzhangcheng.eu.cc/blog/nodejs-rest-api-design</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://personal-site-liard-omega.vercel.app/blog/video-editing-rhythm</loc>
+    <loc>https://zhuzhangcheng.eu.cc/blog/video-editing-rhythm</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

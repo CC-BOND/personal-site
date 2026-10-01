@@ -12,17 +12,22 @@ import { site } from '@/data/site'
 <style scoped>
 .footer {
   padding-block: 34px;
-  border-top: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
+  border-top: 1px solid var(--line);
 }
 .footer p {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--gray);
-}
-.footer .en {
   font-family: var(--font-en);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 860px) {
+  .footer {
+    flex-direction: column;
+  }
 }
 </style>

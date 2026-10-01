@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <main class="page wrap">
-    <span class="section-index">404 / Not Found</span>
+    <span class="meta">404 / Not Found</span>
     <h1 class="page-title">页面不存在</h1>
     <p class="page-desc">你访问的地址不存在或已被移除。</p>
     <RouterLink to="/" class="btn btn-solid notfound-cta">

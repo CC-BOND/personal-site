@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import SectionHead from '@/components/SectionHead.vue'
+import { useDetailOverlay } from '@/composables/useDetailOverlay'
 import { useToast } from '@/composables/useToast'
 import { site } from '@/data/site'
 
+const overlay = useDetailOverlay()
 const toast = useToast()
 
-function onMore(e: MouseEvent) {
-  // 未配置真实 GitHub 地址时回退到 Toast 占位
+function onMore(event: MouseEvent) {
+  // 未配置真实链接时回退到 Toast 占位
   if (!site.projects.more.href) {
-    e.preventDefault()
+    event.preventDefault()
     toast.show()
   }
 }
@@ -18,35 +20,43 @@ function onMore(e: MouseEvent) {
 <template>
   <section class="section wrap" id="projects">
     <SectionHead index="03 / Projects" title="精选项目" :sub="site.projects.sub" />
-    <div class="projects-grid">
-      <article
-        v-for="p in site.projects.items"
-        :key="p.slug"
-        class="project-card reveal"
-        v-reveal
-      >
-        <div class="project-thumb">
-          <img :src="p.image" :alt="p.title" />
-        </div>
-        <div class="project-body">
-          <h3>{{ p.title }}</h3>
-          <p>{{ p.description }}</p>
-          <div class="tech">
-            <span v-for="t in p.tech" :key="t">{{ t }}</span>
-          </div>
-          <RouterLink :to="`/projects/${p.slug}`" class="btn btn-ghost">
-            查看详情 <span class="arr">→</span>
-          </RouterLink>
-        </div>
-      </article>
 
-      <article class="project-card project-more reveal" v-reveal>
-        <a :href="site.projects.more.href || '#'" @click="onMore">
-          <span class="pm-label">{{ site.projects.more.label }}</span>
-          <span class="pm-title" v-html="site.projects.more.titleHtml"></span>
-          <span class="pm-arr">→</span>
-        </a>
-      </article>
+    <div class="projects-grid">
+      <RouterLink
+        v-for="(project, i) in site.projects.items"
+        :key="project.slug"
+        :to="`/projects/${project.slug}`"
+        class="card reveal"
+        :data-d="i"
+        v-reveal
+        @click.prevent="overlay.open({ kind: 'project', project })"
+      >
+        <span class="card-thumb">
+          <img :src="project.image" :alt="project.title" loading="lazy" />
+        </span>
+        <span class="card-title">
+          <i>{{ String(i + 1).padStart(2, '0') }}</i>
+          <h3>{{ project.title }}</h3>
+        </span>
+        <span class="card-tags">
+          <span v-for="tech in project.tech.slice(0, 3)" :key="tech" class="tag">{{ tech }}</span>
+        </span>
+        <span class="card-note">{{ project.highlights[0] }}</span>
+      </RouterLink>
+
+      <a
+        class="card-more reveal"
+        data-d="3"
+        v-reveal
+        :href="site.projects.more.href || '#'"
+        target="_blank"
+        rel="noopener"
+        @click="onMore"
+      >
+        <span class="meta">{{ site.projects.more.label }}</span>
+        <b v-html="site.projects.more.titleHtml"></b>
+        <span class="arr">→</span>
+      </a>
     </div>
   </section>
 </template>
@@ -54,98 +64,104 @@ function onMore(e: MouseEvent) {
 <style scoped>
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  grid-template-columns: repeat(3, 1fr) 0.85fr;
+  gap: clamp(14px, 1.6vw, 26px);
+  margin-top: clamp(36px, 4.4vw, 64px);
 }
-.project-card {
-  background: var(--paper);
+.card {
   display: flex;
   flex-direction: column;
-  transition: background 0.25s;
 }
-.project-card:hover {
-  background: var(--white);
-}
-.project-thumb {
+.card-thumb {
   position: relative;
+  display: block;
   overflow: hidden;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 10;
+  background: var(--paper-deep);
 }
-.project-thumb img {
+.card-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: grayscale(1);
-  transition: transform 0.5s ease;
+  transition: transform 0.7s var(--ease), filter 0.5s;
 }
-.project-card:hover .project-thumb img {
-  transform: scale(1.04);
+.card:hover .card-thumb img {
+  transform: scale(1.05);
+  filter: grayscale(0);
 }
-.project-body {
-  padding: 26px 26px 30px;
+.card-title {
   display: flex;
-  flex-direction: column;
-  flex: 1;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 18px;
 }
-.project-body h3 {
+.card-title i {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 13px;
+  color: var(--accent);
+}
+.card-title h3 {
   font-family: var(--font-serif);
-  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 10px;
+  font-size: clamp(17px, 1.5vw, 24px);
+  transition: transform 0.3s var(--ease);
 }
-.project-body p {
-  font-size: 14px;
+.card:hover .card-title h3 {
+  transform: translateX(5px);
+}
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+.card-note {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
   color: var(--gray);
-  margin-bottom: 18px;
-  flex: 1;
-  line-height: 1.7;
+  line-height: 1.65;
 }
-.project-body .tech {
-  margin-bottom: 18px;
-}
-.project-more {
-  border-left: 1px solid var(--line);
-}
-.project-more a {
+.card-more {
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(20px, 2vw, 30px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
-  min-height: 280px;
-  padding: 26px;
-  background: var(--ink);
-  color: var(--white);
-  transition: background 0.25s;
+  min-height: 260px;
+  transition: background 0.3s;
 }
-.project-more a:hover {
+.card-more:hover {
   background: var(--ink-soft);
 }
-.project-more .pm-label {
-  font-family: var(--font-en);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  color: rgba(255, 255, 255, 0.55);
+.card-more .meta {
+  color: rgba(242, 240, 234, 0.5);
 }
-.project-more .pm-title {
+.card-more b {
   font-family: var(--font-serif);
-  font-size: 24px;
   font-weight: 900;
-  line-height: 1.4;
+  font-size: clamp(20px, 1.9vw, 30px);
+  line-height: 1.5;
 }
-.project-more .pm-arr {
+.card-more .arr {
   font-family: var(--font-en);
-  font-size: 28px;
-  font-weight: 300;
+  font-size: 30px;
+  color: var(--accent);
+  transition: transform 0.3s var(--ease);
+}
+.card-more:hover .arr {
+  transform: translateX(8px);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1100px) {
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 620px) {
   .projects-grid {
     grid-template-columns: 1fr;
   }

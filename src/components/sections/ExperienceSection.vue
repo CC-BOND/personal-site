@@ -6,8 +6,15 @@ import { site } from '@/data/site'
 <template>
   <section class="section wrap" id="experience">
     <SectionHead index="04 / Experience" title="工作经历" :sub="site.experience.sub" />
+
     <div class="timeline">
-      <div v-for="item in site.experience.items" :key="item.period" class="tl-row reveal" v-reveal>
+      <div
+        v-for="(item, i) in site.experience.items"
+        :key="item.period"
+        class="tl-row reveal"
+        :data-d="i"
+        v-reveal
+      >
         <div class="tl-time">{{ item.period }}</div>
         <div class="tl-axis"><span class="tl-dot"></span></div>
         <div class="tl-body">
@@ -22,74 +29,78 @@ import { site } from '@/data/site'
 
 <style scoped>
 .timeline {
-  display: flex;
-  flex-direction: column;
+  margin-top: clamp(36px, 4.4vw, 64px);
 }
 .tl-row {
   display: grid;
-  grid-template-columns: 200px 40px 1fr;
-  gap: 0;
-  padding: 34px 0;
+  grid-template-columns: minmax(160px, 300px) 70px 1fr;
+  align-items: center;
   border-bottom: 1px solid var(--line);
 }
+.tl-row:first-child {
+  border-top: 1px solid var(--line);
+}
 .tl-time {
-  font-family: var(--font-en);
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
   letter-spacing: 0.06em;
   color: var(--gray);
-  padding-top: 6px;
+  padding: 34px 0;
 }
 .tl-axis {
   position: relative;
-  display: flex;
-  justify-content: center;
-}
-.tl-dot {
-  width: 12px;
-  height: 12px;
-  background: var(--ink);
-  align-self: center;
-  position: relative;
-  z-index: 1;
-}
-.tl-row:first-child .tl-dot {
-  box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--ink);
+  align-self: stretch;
+  display: grid;
+  place-items: center;
 }
 .tl-axis::before {
   content: "";
   position: absolute;
-  top: -40px;
-  bottom: -40px;
+  top: 0;
+  bottom: 0;
+  left: 50%;
   width: 1px;
-  background: var(--line);
+  background: var(--line-strong);
 }
-.tl-row:first-child .tl-axis::before {
-  top: 50%;
+.tl-dot {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  background: var(--ink);
 }
-.tl-row:last-child .tl-axis::before {
-  bottom: 50%;
+.tl-row:first-child .tl-dot {
+  background: var(--accent);
+}
+.tl-body {
+  padding: 32px 0 32px 6px;
 }
 .tl-body h3 {
   font-family: var(--font-serif);
-  font-size: 20px;
   font-weight: 700;
-  margin-bottom: 6px;
+  font-size: clamp(19px, 1.7vw, 28px);
 }
 .tl-body .co {
-  font-size: 14px;
-  color: var(--gray);
-  margin-bottom: 10px;
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--accent);
 }
 .tl-body .desc {
+  margin-top: 12px;
   font-size: 15px;
   color: var(--ink-soft);
-  max-width: 640px;
+  max-width: 900px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .tl-row {
-    grid-template-columns: 90px 28px 1fr;
-    padding: 26px 0;
+    grid-template-columns: 96px 42px 1fr;
+  }
+  .tl-time {
+    padding: 24px 0;
+    font-size: 12px;
+  }
+  .tl-body {
+    padding: 24px 0;
   }
 }
 </style>
